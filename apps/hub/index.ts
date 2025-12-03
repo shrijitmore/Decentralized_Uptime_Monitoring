@@ -1,6 +1,6 @@
 import { randomUUIDv7, type ServerWebSocket } from "bun";
-import type { IncomingMessage, SignupIncomingMessage } from "common/types";
-import { prismaClient } from "db/client";
+import type { IncomingMessage, SignupIncomingMessage } from "common";
+import { prisma as prismaClient } from "db";
 import { PublicKey } from "@solana/web3.js";
 import nacl from "tweetnacl";
 import nacl_util from "tweetnacl-util";
@@ -8,7 +8,7 @@ import nacl_util from "tweetnacl-util";
 const availableValidators: { validatorId: string, socket: ServerWebSocket<unknown>, publicKey: string }[] = [];
 
 const CALLBACKS : { [callbackId: string]: (data: IncomingMessage) => void } = {}
-const COST_PER_VALIDATION = 100; // in lamports
+const COST_PER_VALIDATION = 100; 
 
 Bun.serve({
     fetch(req, server) {
@@ -147,7 +147,7 @@ setInterval(async () => {
                         await tx.validator.update({
                             where: { id: validatorId },
                             data: {
-                                pendingPayouts: { increment: COST_PER_VALIDATION },
+                                pendingPayout: { increment: COST_PER_VALIDATION },
                             },
                         });
                     });
